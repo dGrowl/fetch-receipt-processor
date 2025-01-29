@@ -1,0 +1,12 @@
+#!/bin/sh
+
+echo "Checking types..."
+typecheck_output=$(npm run check)
+
+if [ $? -ne 0 ]; then
+    echo "** ERROR: Type checking failed. Commit blocked. **"
+    echo "$typecheck_output"
+    exit 1
+fi
+
+exit 0
