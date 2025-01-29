@@ -1,9 +1,15 @@
+import { dirname, join } from "node:path"
+import { fileURLToPath } from "node:url"
+
+import AutoLoad from "@fastify/autoload"
 import Fastify from "fastify"
 
-const server = Fastify({ logger: true })
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
-server.get("/", async (_request, reply) => {
-	reply.send({ greeting: "Hello, Fetch!" })
+const server = Fastify({ logger: true })
+server.register(AutoLoad, {
+	dir: join(__dirname, "api"),
 })
 
 try {
