@@ -2,10 +2,19 @@
   "name": "fetch-receipts",
   "version": "0.1.0",
   "description": "Web service that processes receipts",
-  "main": "index.js",
+  "type": "module",
   "scripts": {
+    "build": "tsc -b --clean && tsc -b",
+    "check": "tsc --noEmit",
+    "dev": "tsx watch ./src/index.ts",
+    "start": "node ./dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Derek (github.com/dGrowl)",
-  "license": "CC0-1.0"
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "@types/node": "^22.12.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  }
 }
