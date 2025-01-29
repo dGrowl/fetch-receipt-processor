@@ -1,13 +1,24 @@
+import {
+	Type,
+	type FastifyPluginAsyncTypebox,
+} from "@fastify/type-provider-typebox"
 import type { AutoloadPluginOptions } from "@fastify/autoload"
-import type { FastifyPluginCallback } from "fastify"
 
-type AutoloadPluginHandler = FastifyPluginCallback<
+type AutoloadPluginHandler = FastifyPluginAsyncTypebox<
 	NonNullable<AutoloadPluginOptions>
 >
 
+const schema = {
+	body: Type.Object({
+		name: Type.String({ maxLength: 32, minLength: 1 }),
+	}),
+}
+const options = { schema }
+
 const handler: AutoloadPluginHandler = async (app, _options) => {
-	app.get("/", async (_request, _reply) => {
-		return { greeting: "Hello, Fetch!" }
+	app.post("/", options, async (request, _reply) => {
+		const { name } = request.body
+		return { greeting: `Hello, ${name}!` }
 	})
 }
 
