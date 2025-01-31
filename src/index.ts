@@ -1,27 +1,27 @@
-import { dirname, join } from "node:path"
-import { fileURLToPath } from "node:url"
-
-import AutoLoad from "@fastify/autoload"
-import Fastify from "fastify"
 import {
 	TypeBoxValidatorCompiler,
 	type TypeBoxTypeProvider,
 } from "@fastify/type-provider-typebox"
+import AutoLoad from "@fastify/autoload"
+import Fastify from "fastify"
+import Swagger from "@fastify/swagger"
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
+import { autoloadOptions, swaggerOptions } from "./plugins.js"
 
-const server = Fastify({ logger: true })
-	.setValidatorCompiler(TypeBoxValidatorCompiler)
-	.withTypeProvider<TypeBoxTypeProvider>()
+const main = async () => {
+	const server = Fastify({ logger: true })
+		.setValidatorCompiler(TypeBoxValidatorCompiler)
+		.withTypeProvider<TypeBoxTypeProvider>()
+	await server.register(Swagger, swaggerOptions)
+	await server.register(AutoLoad, autoloadOptions)
+	await server.ready()
 
-server.register(AutoLoad, {
-	dir: join(__dirname, "api"),
-})
-
-try {
-	await server.listen({ port: 3000 })
-} catch (error) {
-	server.log.error(error)
-	process.exit(1)
+	try {
+		await server.listen({ port: 3000 })
+	} catch (error) {
+		server.log.error(error)
+		process.exit(1)
+	}
 }
+
+main()
