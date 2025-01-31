@@ -1,7 +1,10 @@
 {
-  "javascript": {
-    "formatter": {
-      "semicolons": "asNeeded"
-    }
-  }
+	"files": {
+		"include": ["src/**/*.ts", "tests/**/*.ts"]
+	},
+	"javascript": {
+		"formatter": {
+			"semicolons": "asNeeded"
+		}
+	}
 }

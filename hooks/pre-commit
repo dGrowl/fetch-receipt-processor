@@ -27,4 +27,13 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+echo "Testing..."
+test_output=$(env NODE_OPTIONS='--import tsx' npx vitest run)
+
+if [ $? -ne 0 ]; then
+    echo "** ERROR: Tests failed. Commit blocked. **"
+    echo "$test_output"
+    exit 1
+fi
+
 exit 0
