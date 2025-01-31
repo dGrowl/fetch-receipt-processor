@@ -7,9 +7,15 @@ import Fastify, { type FastifyServerOptions } from "fastify"
 import Swagger from "@fastify/swagger"
 
 import { autoloadOptions, swaggerOptions } from "./plugins.js"
+import formats from "../formats/formats.js"
 
 const fastifyOptions: FastifyServerOptions = {
 	logger: true,
+	ajv: {
+		customOptions: {
+			formats,
+		},
+	},
 }
 
 export const createServer = async () => {
