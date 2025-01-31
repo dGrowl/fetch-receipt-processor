@@ -1,14 +1,16 @@
 import { dirname, join } from "node:path"
 import { fileURLToPath } from "node:url"
 
+import type { SwaggerOptions } from "@fastify/swagger"
+
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 export const autoloadOptions = {
-	dir: join(__dirname, "api"),
+	dir: join(__dirname, "../api"),
 }
 
-export const swaggerOptions = {
+export const swaggerOptions: SwaggerOptions = {
 	openapi: {
 		openapi: "3.0.3",
 		info: {
