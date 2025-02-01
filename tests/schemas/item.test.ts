@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest"
 
 import { ajv } from "../globals/validation.js"
+import { invalidPrices } from "../mocks/price.js"
 import ItemSchema, { Item } from "../../src/schemas/item.js"
 
 const shortDescription = ItemSchema.properties.shortDescription.example
@@ -18,7 +19,7 @@ const validItems: Item[] = [
 	},
 ]
 
-const invalidObjects = [
+const invalidItems = [
 	{},
 	{ shortDescription },
 	{ price },
@@ -39,38 +40,7 @@ const invalidObjects = [
 		shortDescription: shortDescription + "'); DROP TABLE Receipts;--",
 		price,
 	},
-	{
-		shortDescription,
-		price: price + "hockey",
-	},
-	{
-		shortDescription,
-		price: ".99",
-	},
-	{
-		shortDescription,
-		price: "20",
-	},
-	{
-		shortDescription,
-		price: "12345.",
-	},
-	{
-		shortDescription,
-		price: "2.999",
-	},
-	{
-		shortDescription,
-		price: "1,234.56",
-	},
-	{
-		shortDescription,
-		price: "-" + price,
-	},
-	{
-		shortDescription,
-		price: "Infinity",
-	},
+	...invalidPrices.map((p) => ({ shortDescription, price: p })),
 ]
 
 const validate = ajv.compile(ItemSchema)
@@ -80,7 +50,7 @@ describe.concurrent("ItemSchema validation", () => {
 		expect(validate(item)).toBe(true),
 	)
 
-	it.each(invalidObjects)("should reject invalid objects", (object) =>
-		expect(validate(object)).toBe(false),
+	it.each(invalidItems)("should reject invalid items", (item) =>
+		expect(validate(item)).toBe(false),
 	)
 })
