@@ -6,7 +6,7 @@ import AutoLoad from "@fastify/autoload"
 import Fastify from "fastify"
 import Swagger from "@fastify/swagger"
 
-import { autoloadOptions, fastifyOptions, swaggerOptions } from "./plugins.js"
+import { autoloadOptions, fastifyOptions, swaggerOptions } from "./options.js"
 import schemas from "../schemas/schemas.js"
 
 export const createServer = async () => {
