@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
-import { TypeCompiler } from "@sinclair/typebox/compiler"
 
+import { ajv } from "../globals/validation.js"
 import ItemSchema, { Item } from "../../src/schemas/item.js"
 
 const shortDescription = ItemSchema.properties.shortDescription.example
@@ -73,14 +73,14 @@ const invalidObjects = [
 	},
 ]
 
-const validator = TypeCompiler.Compile(ItemSchema)
+const validate = ajv.compile(ItemSchema)
 
-describe.concurrent("ItemSchema validator", () => {
+describe.concurrent("ItemSchema validation", () => {
 	it.each(validItems)("should affirm valid items", (item) =>
-		expect(validator.Check(item)).toBe(true),
+		expect(validate(item)).toBe(true),
 	)
 
 	it.each(invalidObjects)("should reject invalid objects", (object) =>
-		expect(validator.Check(object)).toBe(false),
+		expect(validate(object)).toBe(false),
 	)
 })
