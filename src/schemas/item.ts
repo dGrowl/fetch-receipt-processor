@@ -1,4 +1,4 @@
-import { Type } from "@fastify/type-provider-typebox"
+import { Type, type Static } from "@fastify/type-provider-typebox"
 
 const ItemSchema = Type.Object(
 	{
@@ -18,5 +18,7 @@ const ItemSchema = Type.Object(
 		additionalProperties: false,
 	},
 )
+
+export type Item = Static<typeof ItemSchema>
 
 export default ItemSchema

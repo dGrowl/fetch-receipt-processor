@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest"
 import { TypeCompiler } from "@sinclair/typebox/compiler"
 
-import ItemSchema from "../../src/schemas/item.js"
+import ItemSchema, { Item } from "../../src/schemas/item.js"
 
 const shortDescription = ItemSchema.properties.shortDescription.example
 const price = ItemSchema.properties.price.example
 
-const validItems = [
+const validItems: Item[] = [
 	{ shortDescription, price },
 	{
 		shortDescription: "   Klarbrunn 12-PK 12 FL OZ  ",
