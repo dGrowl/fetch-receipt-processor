@@ -17,5 +17,7 @@
 		"outDir": "dist",
 
 		"lib": ["es2022"]
-	}
+	},
+	"exclude": ["tests/**/*"],
+	"include": ["src/**/*"]
 }
