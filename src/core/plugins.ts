@@ -1,12 +1,22 @@
 import { dirname, join } from "node:path"
 import { fileURLToPath } from "node:url"
 
+import type { AutoloadPluginOptions } from "@fastify/autoload"
+import type { FastifyServerOptions } from "fastify"
+import type { Options as AjvOptions } from "ajv"
 import type { SwaggerOptions } from "@fastify/swagger"
+
+import formats from "../formats/formats.js"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
-export const autoloadOptions = {
+export const ajvOptions: AjvOptions = {
+	formats,
+	keywords: [{ keyword: "example", type: "string" }],
+}
+
+export const autoloadOptions: AutoloadPluginOptions = {
 	dir: join(__dirname, "../api"),
 }
 
@@ -18,5 +28,12 @@ export const swaggerOptions: SwaggerOptions = {
 			description: "A simple receipt processor",
 			version: "1.0.0",
 		},
+	},
+}
+
+export const fastifyOptions: FastifyServerOptions = {
+	logger: true,
+	ajv: {
+		customOptions: ajvOptions,
 	},
 }
