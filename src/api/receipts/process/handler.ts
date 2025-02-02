@@ -1,24 +1,38 @@
-import {
-	Type,
-	type FastifyPluginAsyncTypebox,
-} from "@fastify/type-provider-typebox"
+import { randomUUID } from "node:crypto"
+
 import type { AutoloadPluginOptions } from "@fastify/autoload"
+import type { FastifyPluginAsyncTypebox } from "@fastify/type-provider-typebox"
+import type { FastifySchema } from "fastify"
+
+import { ObjectRef } from "../../../util/helpers.js"
+import BadRequestSchema from "../../../schemas/badRequest.js"
+import ErrorSchema from "../../../schemas/error.js"
+import ReceiptSchema from "../../../schemas/receipt.js"
+import ReceiptsOKSchema from "../../../schemas/receiptsOk.js"
 
 type AutoloadPluginHandler = FastifyPluginAsyncTypebox<
 	NonNullable<AutoloadPluginOptions>
 >
 
+const summary = "Submits a receipt for processing."
+const swaggerSchema: FastifySchema = {
+	summary,
+	description: summary,
+}
 const schema = {
-	body: Type.Object({
-		name: Type.String({ maxLength: 32, minLength: 1 }),
-	}),
+	...swaggerSchema,
+	body: ObjectRef(ReceiptSchema),
+	response: {
+		200: ReceiptsOKSchema,
+		"4xx": ObjectRef(ErrorSchema),
+		400: ObjectRef(BadRequestSchema),
+	},
 }
 const options = { schema }
 
 const handler: AutoloadPluginHandler = async (app, _options) => {
-	app.post("/", options, async (request, _reply) => {
-		const { name } = request.body
-		return { greeting: `Hello, ${name}!` }
+	app.post("/", options, async (_request, _reply) => {
+		return { id: randomUUID() }
 	})
 }
 
