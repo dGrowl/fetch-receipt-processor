@@ -29,6 +29,10 @@ export const swaggerOptions: SwaggerOptions = {
 			version: "1.0.0",
 		},
 	},
+	refResolver: {
+		buildLocalReference: (json, _baseUri, _fragment, i) =>
+			json.$id?.toString() ?? `def-${i}`,
+	},
 }
 
 export const fastifyOptions: FastifyServerOptions = {
