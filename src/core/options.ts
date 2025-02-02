@@ -36,7 +36,7 @@ export const swaggerOptions: SwaggerOptions = {
 }
 
 export const fastifyOptions: FastifyServerOptions = {
-	logger: true,
+	logger: process.env.NODE_ENV !== "test",
 	ajv: {
 		customOptions: ajvOptions,
 	},
