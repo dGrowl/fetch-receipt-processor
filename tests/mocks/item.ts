@@ -1,3 +1,4 @@
+import { modify, omit } from "../globals/helpers.js"
 import ItemSchema, { type Item } from "../../src/schemas/item.js"
 
 const { shortDescription, price } = ItemSchema.properties
@@ -7,13 +8,7 @@ export const exampleItem = (): Item => ({
 	price: price.example,
 })
 
-export const modifiedItem = (changed: object, omitted: string[] = []) => {
-	const item = {
-		...exampleItem(),
-		...changed,
-	}
-	for (const prop of omitted) {
-		delete item[prop]
-	}
-	return item
-}
+export const modifiedItem = (changes: object) => modify(exampleItem(), changes)
+
+export const filteredItem = (propsToRemove: [string, ...string[]]) =>
+	omit(exampleItem(), propsToRemove)

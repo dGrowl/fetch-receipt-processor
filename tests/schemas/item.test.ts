@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest"
 
 import { ajv } from "../globals/validation.js"
-import { exampleItem, modifiedItem } from "../mocks/item.js"
+import { exampleItem, filteredItem, modifiedItem } from "../mocks/item.js"
 import { invalidPrices } from "../mocks/price.js"
 import ItemSchema, { type Item } from "../../src/schemas/item.js"
 
@@ -17,13 +17,13 @@ const validItems: Item[] = [
 const invalidItems = [
 	{},
 	modifiedItem({ extra: "property" }),
-	...properties.map((prop) => modifiedItem({}, [prop])),
+	...properties.map((prop) => filteredItem([prop])),
 	...properties.map((prop) => modifiedItem({ [prop]: "" })),
 	{
 		shortDescription: `${shortDescription}'); DROP TABLE Receipts;--`,
 		price,
 	},
-	...invalidPrices.map((p) => ({ shortDescription, price: p })),
+	...invalidPrices.map((price) => modifiedItem({ price })),
 ]
 
 const validate = ajv.compile(ItemSchema)
