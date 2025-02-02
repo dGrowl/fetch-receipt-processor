@@ -1,43 +1,26 @@
 import { describe, expect, it } from "vitest"
 
 import { ajv } from "../globals/validation.js"
+import { exampleItem, modifiedItem } from "../mocks/item.js"
 import { invalidPrices } from "../mocks/price.js"
-import ItemSchema, { Item } from "../../src/schemas/item.js"
+import ItemSchema, { type Item } from "../../src/schemas/item.js"
 
-const shortDescription = ItemSchema.properties.shortDescription.example
-const price = ItemSchema.properties.price.example
+const { shortDescription, price } = exampleItem()
+const properties = Object.keys(ItemSchema.properties)
 
 const validItems: Item[] = [
-	{ shortDescription, price },
-	{
-		shortDescription: "   Klarbrunn 12-PK 12 FL OZ  ",
-		price,
-	},
-	{
-		shortDescription,
-		price: "12345.00",
-	},
+	exampleItem(),
+	modifiedItem({ shortDescription: "   Klarbrunn 12-PK 12 FL OZ  " }),
+	modifiedItem({ price: "12345.00" }),
 ]
 
 const invalidItems = [
 	{},
-	{ shortDescription },
-	{ price },
+	modifiedItem({ extra: "property" }),
+	...properties.map((prop) => modifiedItem({}, [prop])),
+	...properties.map((prop) => modifiedItem({ [prop]: "" })),
 	{
-		shortDescription,
-		price,
-		extra: "property",
-	},
-	{
-		shortDescription: "",
-		price,
-	},
-	{
-		shortDescription,
-		price: "",
-	},
-	{
-		shortDescription: shortDescription + "'); DROP TABLE Receipts;--",
+		shortDescription: `${shortDescription}'); DROP TABLE Receipts;--`,
 		price,
 	},
 	...invalidPrices.map((p) => ({ shortDescription, price: p })),
