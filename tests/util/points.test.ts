@@ -9,7 +9,7 @@ import {
 	calcTimePoints,
 	calcTotalPoints,
 } from "../../src/util/points.js"
-import { exampleItem } from "../mocks/item.js"
+import { exampleItem, itemsA, itemsB } from "../mocks/item.js"
 import { receiptA, receiptB } from "../mocks/receipt.js"
 import type { Item } from "../../src/schemas/item.js"
 import type { Receipt } from "../../src/schemas/receipt.js"
@@ -65,10 +65,10 @@ describe.concurrent("calcItemsLengthPoints", () => {
 })
 
 const itemPoints: [Item, number][] = [
-	[receiptA.items[0], 0],
-	[receiptA.items[1], 3],
-	[receiptA.items[4], 3],
-	[receiptB.items[0], 0],
+	[itemsA[0], 0],
+	[itemsA[1], 3],
+	[itemsA[4], 3],
+	[itemsB[0], 0],
 	[{ shortDescription: "Tri", price: "5" }, 1],
 	[{ shortDescription: "", price: "0.01" }, 1],
 	[{ shortDescription: "Item", price: "399.99" }, 0],

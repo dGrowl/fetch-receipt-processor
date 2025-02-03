@@ -1,11 +1,11 @@
 import { describe, expect } from "vitest"
+import type { InjectOptions } from "fastify"
 
 import { ajv } from "../globals/validation.js"
 import { exampleReceipt, filteredReceipt } from "../mocks/receipt.js"
 import { modify } from "../globals/helpers.js"
 import { serverTest } from "../fixtures/server.js"
 import ProcessOKSchema from "../../src/schemas/processOk.js"
-import type { InjectOptions } from "fastify"
 
 const okValidator = ajv.compile(ProcessOKSchema)
 

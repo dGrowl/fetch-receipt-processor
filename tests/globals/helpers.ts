@@ -3,7 +3,10 @@ export const modify = <T extends object>(base: T, changes: object): T => ({
 	...changes,
 })
 
-export const omit = (base: object, omissions: string[]): object => {
+export const omit = (
+	base: Record<string, unknown>,
+	omissions: string[],
+): object => {
 	for (const prop of omissions) {
 		delete base[prop]
 	}

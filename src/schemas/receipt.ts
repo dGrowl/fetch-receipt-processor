@@ -1,7 +1,7 @@
 import { Type, type Static } from "@fastify/type-provider-typebox"
 
 import { ObjectRef } from "../util/helpers.js"
-import ItemSchema, { type Item } from "./item.js"
+import ItemSchema from "./item.js"
 
 const ReceiptSchema = Type.Object(
 	{

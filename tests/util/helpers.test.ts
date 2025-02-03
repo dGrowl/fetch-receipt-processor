@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import { isAlphaNumeric } from "../../src/util/helpers"
+import { isAlphaNumeric } from "../../src/util/helpers.js"
 
 const validStrings = [
 	"a",
