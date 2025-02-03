@@ -7,12 +7,15 @@ import Fastify from "fastify"
 import Swagger from "@fastify/swagger"
 
 import { autoloadOptions, fastifyOptions, swaggerOptions } from "./options.js"
+import MemoryDatabase from "./database.js"
 import schemas from "../schemas/schemas.js"
 
 export const createServer = async () => {
 	const server = Fastify(fastifyOptions)
 		.setValidatorCompiler(TypeBoxValidatorCompiler)
 		.withTypeProvider<TypeBoxTypeProvider>()
+
+	server.decorate("db", new MemoryDatabase())
 
 	await server.register(Swagger, swaggerOptions)
 	await server.register(AutoLoad, autoloadOptions)
