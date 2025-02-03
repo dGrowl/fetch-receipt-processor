@@ -1,13 +1,13 @@
 import { describe, expect } from "vitest"
 
 import { ajv } from "../globals/validation.js"
-import { exampleReceipt } from "../mocks/receipt.js"
+import { exampleReceipt, filteredReceipt } from "../mocks/receipt.js"
 import { modify } from "../globals/helpers.js"
 import { serverTest } from "../fixtures/server.js"
-import ReceiptsOKSchema from "../../src/schemas/receiptsOk.js"
+import ProcessOKSchema from "../../src/schemas/processOk.js"
 import type { InjectOptions } from "fastify"
 
-const okValidator = ajv.compile(ReceiptsOKSchema)
+const okValidator = ajv.compile(ProcessOKSchema)
 
 const baseRequest: InjectOptions = {
 	method: "POST",
@@ -64,5 +64,19 @@ describe("POST /receipts/process", () => {
 		const [{ id: id1 }, { id: id2 }] = responses.map((r) => r.json())
 
 		expect(id1).not.toBe(id2)
+	})
+
+	serverTest("should store receipt data in database", async ({ server }) => {
+		const response = await server.inject(exampleRequest)
+		const { id } = response.json()
+
+		expect(server.db.get(id)).toMatchObject(exampleReceipt())
+	})
+
+	serverTest("should not store an invalid receipt", async ({ server }) => {
+		const badReceipt = filteredReceipt(["total"])
+		await server.inject(createRequest(badReceipt))
+
+		expect(server.db.size).toBe(0)
 	})
 })
