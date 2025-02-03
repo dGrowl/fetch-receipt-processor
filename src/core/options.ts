@@ -13,11 +13,17 @@ import formats from "../formats/formats.js"
 
 export const ajvOptions: AjvOptions = {
 	formats,
-	keywords: [{ keyword: "example", type: "string" }],
+	keywords: [
+		{
+			keyword: "example",
+			type: ["string", "number", "integer", "boolean", "object", "array"],
+		},
+	],
 }
 
 export const autoloadOptions: AutoloadPluginOptions = {
 	dir: apiDir,
+	routeParams: true,
 }
 
 const swaggerOptionsStatic: FastifyStaticSwaggerOptions = {
