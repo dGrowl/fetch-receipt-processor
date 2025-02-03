@@ -34,8 +34,6 @@ const ReceiptSchema = Type.Object(
 	},
 )
 
-export interface Receipt extends Static<typeof ReceiptSchema> {
-	items: [Item, ...Item[]]
-}
+export type Receipt = Static<typeof ReceiptSchema>
 
 export default ReceiptSchema
