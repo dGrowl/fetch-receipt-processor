@@ -1,15 +1,15 @@
-import { dirname, join } from "node:path"
-import { fileURLToPath } from "node:url"
+import { join } from "node:path"
 
 import type { AutoloadPluginOptions } from "@fastify/autoload"
 import type { FastifyServerOptions } from "fastify"
 import type { Options as AjvOptions } from "ajv"
-import type { SwaggerOptions } from "@fastify/swagger"
+import type {
+	FastifyDynamicSwaggerOptions,
+	FastifyStaticSwaggerOptions,
+} from "@fastify/swagger"
 
+import { apiDir, metaDir } from "../util/helpers.js"
 import formats from "../formats/formats.js"
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
 
 export const ajvOptions: AjvOptions = {
 	formats,
@@ -17,10 +17,18 @@ export const ajvOptions: AjvOptions = {
 }
 
 export const autoloadOptions: AutoloadPluginOptions = {
-	dir: join(__dirname, "../api"),
+	dir: apiDir,
 }
 
-export const swaggerOptions: SwaggerOptions = {
+const swaggerOptionsStatic: FastifyStaticSwaggerOptions = {
+	mode: "static",
+	specification: {
+		path: join(metaDir, "api.yaml"),
+		baseDir: metaDir,
+	},
+}
+
+const swaggerOptionsDynamic: FastifyDynamicSwaggerOptions = {
 	openapi: {
 		openapi: "3.0.3",
 		info: {
@@ -34,6 +42,13 @@ export const swaggerOptions: SwaggerOptions = {
 			json.$id?.toString() ?? `def-${i}`,
 	},
 }
+
+export const swaggerOptions = {
+	static: swaggerOptionsStatic,
+	dynamic: swaggerOptionsDynamic,
+}
+
+export type SwaggerType = "static" | "dynamic"
 
 export const fastifyOptions: FastifyServerOptions = {
 	logger: process.env.NODE_ENV !== "test",
