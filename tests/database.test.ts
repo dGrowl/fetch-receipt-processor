@@ -1,8 +1,15 @@
+import { randomUUID } from "node:crypto"
+
 import { describe, expect } from "vitest"
 
 import { databaseTest } from "./fixtures/database.js"
-import { exampleReceipt, receiptA } from "./mocks/receipt.js"
-import { randomUUID } from "node:crypto"
+import { exampleReceipt, receiptA, receiptB } from "./mocks/receipt.js"
+
+describe.concurrent("MemoryDatabase::size", () => {
+	databaseTest("should start at 0", ({ db }) => {
+		expect(db.size).toBe(0)
+	})
+})
 
 describe.concurrent("MemoryDatabase::storeReceipt", () => {
 	databaseTest("should return a uuidv4", ({ db }) => {
@@ -29,6 +36,14 @@ describe.concurrent("MemoryDatabase::storeReceipt", () => {
 		const storedReceipt = db.get(id)
 
 		expect(storedReceipt?.points).toBe(28)
+	})
+
+	databaseTest("should increase the size of the database", ({ db }) => {
+		db.storeReceipt(receiptA)
+		expect(db.size).toBe(1)
+
+		db.storeReceipt(receiptB)
+		expect(db.size).toBe(2)
 	})
 })
 

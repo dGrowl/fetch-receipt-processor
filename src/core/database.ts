@@ -15,7 +15,11 @@ class MemoryDatabase {
 	}
 
 	get(id: string) {
-		return this.data.get(id)
+		return this.data.get(id) ?? null
+	}
+
+	get size() {
+		return this.data.size
 	}
 
 	storeReceipt(receipt: Receipt) {
