@@ -2,7 +2,11 @@ import { describe, expect } from "vitest"
 import type { InjectOptions } from "fastify"
 
 import { ajv } from "../globals/validation.js"
-import { exampleReceipt, filteredReceipt } from "../mocks/receipt.js"
+import {
+	exampleReceipt,
+	filteredReceipt,
+	modifiedReceipt,
+} from "../mocks/receipt.js"
 import { modify } from "../globals/helpers.js"
 import { serverTest } from "../fixtures/server.js"
 import ProcessOKSchema from "../../src/schemas/processOk.js"
@@ -79,4 +83,14 @@ describe("POST /receipts/process", () => {
 
 		expect(server.db.size).toBe(0)
 	})
+
+	serverTest(
+		"should respond with an error on total mismatch",
+		async ({ server }) => {
+			const badReceipt = modifiedReceipt({ total: "6.50" })
+			const response = await server.inject(createRequest(badReceipt))
+
+			expect(response.statusCode).toBe(400)
+		},
+	)
 })

@@ -1,7 +1,7 @@
 import { Type, type Static } from "@fastify/type-provider-typebox"
 
-import { ObjectRef } from "../util/helpers.js"
-import ItemSchema from "./item.js"
+import { moneyStringToCents, ObjectRef } from "../util/helpers.js"
+import ItemSchema, { type Item } from "./item.js"
 
 const ReceiptSchema = Type.Object(
 	{
@@ -35,5 +35,14 @@ const ReceiptSchema = Type.Object(
 )
 
 export type Receipt = Static<typeof ReceiptSchema>
+
+export const validateReceiptTotal = (total: string, items: Item[]) => {
+	const totalCents = moneyStringToCents(total)
+	let itemsCents = 0
+	for (const { price } of items) {
+		itemsCents += moneyStringToCents(price)
+	}
+	return totalCents === itemsCents
+}
 
 export default ReceiptSchema

@@ -14,3 +14,12 @@ export const ObjectRef = <T extends TSchema>(schema: T) =>
 
 export const isAlphaNumeric = (s: string) =>
 	typeof s === "string" && s.match(/^[a-zA-Z0-9]+$/) !== null
+
+export const moneyStringToCents = (money: string) => {
+	const match = money.match(/^(\d+).(\d{2})$/)
+	if (match === null) {
+		return 0
+	}
+	const [_, dollars, cents, ..._rest] = match
+	return 100 * Number(dollars) + Number(cents)
+}
