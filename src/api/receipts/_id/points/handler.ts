@@ -2,6 +2,7 @@ import { errorCodes, type FastifySchema } from "fastify"
 import { Type } from "@fastify/type-provider-typebox"
 
 import { ObjectRef } from "../../../../util/helpers.js"
+import ErrorSchema from "../../../../schemas/error.js"
 import NotFoundSchema from "../../../../schemas/notFound.js"
 import PointsOKSchema from "../../../../schemas/pointsOk.js"
 import ReceiptIDSchema from "../../../../schemas/receiptId.js"
@@ -19,6 +20,7 @@ const schema = {
 	}),
 	response: {
 		200: PointsOKSchema,
+		"4xx": ObjectRef(ErrorSchema),
 		404: ObjectRef(NotFoundSchema),
 	},
 }
