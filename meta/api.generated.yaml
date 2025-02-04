@@ -1,0 +1,185 @@
+openapi: 3.0.3
+info:
+  title: Receipt Processor
+  description: A simple receipt processor
+  version: 1.0.0
+components:
+  schemas:
+    Response::BadRequest:
+      description: The receipt is invalid.
+      type: object
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+        message:
+          type: string
+        statusCode:
+          type: number
+      required:
+        - error
+        - message
+        - statusCode
+    Response::GenericError:
+      description: An unspecified issue.
+      type: object
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+        message:
+          type: string
+        statusCode:
+          type: number
+      required:
+        - error
+        - message
+        - statusCode
+    Schema::Item:
+      additionalProperties: false
+      type: object
+      properties:
+        shortDescription:
+          description: The Short Product Description for the item.
+          pattern: ^[\w\s\-]+$
+          example: Mountain Dew 12PK
+          type: string
+        price:
+          description: The total price payed for this item.
+          pattern: ^\d+\.\d{2}$
+          example: "6.49"
+          type: string
+      required:
+        - shortDescription
+        - price
+    Response::NotFound:
+      description: No receipt found for that ID.
+      type: object
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+        message:
+          type: string
+        statusCode:
+          type: number
+      required:
+        - error
+        - message
+        - statusCode
+    Schema::ReceiptID:
+      description: The ID of the receipt.
+      example: adb6b560-0eef-42bc-9d16-df48f30e89b2
+      pattern: ^\S+$
+      type: string
+    Schema::Receipt:
+      additionalProperties: false
+      type: object
+      properties:
+        retailer:
+          description: The name of the retailer or store the receipt is from.
+          pattern: ^[\w\s\-&]+$
+          example: M&M Corner Market
+          type: string
+        purchaseDate:
+          description: The date of the purchase printed on the receipt.
+          format: date
+          example: 2022-01-01
+          type: string
+        purchaseTime:
+          description: The time of the purchase printed on the receipt. 24-hour time
+            expected.
+          format: time24
+          example: 13:01
+          type: string
+        items:
+          minItems: 1
+          type: array
+          items:
+            $ref: "#/components/schemas/Schema::Item"
+        total:
+          description: The total amount paid on the receipt.
+          pattern: ^\d+\.\d{2}$
+          example: "6.49"
+          type: string
+      required:
+        - retailer
+        - purchaseDate
+        - purchaseTime
+        - items
+        - total
+paths:
+  /receipts/process/:
+    post:
+      summary: Submits a receipt for processing.
+      description: Submits a receipt for processing.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Schema::Receipt"
+      responses:
+        "200":
+          description: Returns the ID assigned to the receipt.
+          content:
+            application/json:
+              schema:
+                description: Returns the ID assigned to the receipt.
+                type: object
+                properties:
+                  id:
+                    $ref: "#/components/schemas/Schema::ReceiptID"
+                required:
+                  - id
+        "400":
+          description: The receipt is invalid.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response::BadRequest"
+        4XX:
+          description: An unspecified issue.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response::GenericError"
+  /receipts/{id}/points/:
+    get:
+      summary: Returns the points awarded for the receipt.
+      description: Returns the points awarded for the receipt.
+      parameters:
+        - schema:
+            $ref: "#/components/schemas/Schema::ReceiptID"
+          in: path
+          name: id
+          required: true
+      responses:
+        "200":
+          description: The number of points awarded.
+          content:
+            application/json:
+              schema:
+                description: The number of points awarded.
+                type: object
+                properties:
+                  points:
+                    example: 100
+                    format: int64
+                    type: integer
+                required:
+                  - points
+        "404":
+          description: No receipt found for that ID.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response::NotFound"
+        4XX:
+          description: An unspecified issue.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response::GenericError"
