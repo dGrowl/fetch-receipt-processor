@@ -5,12 +5,14 @@
   "type": "module",
   "scripts": {
     "build": "tsc -b --clean && tsc -b",
-    "typecheck": "tsc --noEmit",
     "dev": "tsx watch ./src/index.ts",
     "format": "biome format --write",
     "lint": "biome lint --write",
     "start": "node ./dist/index.js",
-    "test": "env NODE_OPTIONS='--import tsx' vitest --reporter=dot"
+    "test": "env NODE_OPTIONS='--import tsx' vitest --reporter=dot",
+    "typecheck": "tsc --noEmit",
+    "docker:build": "docker build -t dgrowl/receipt-processor-api:latest .",
+    "docker:run": "docker run -d --name receipts-server -p 127.0.0.1:3000:3000 dgrowl/receipt-processor-api:latest"
   },
   "author": "Derek (github.com/dGrowl)",
   "license": "CC0-1.0",
